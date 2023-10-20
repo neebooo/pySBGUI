@@ -1,14 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>{{sbname}} - Dashboard</title>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ sbname }} - Settings </title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
     <script>
-      function settings() {
-        window.location.href = "/settings";
-      }
+
       async function setSetting(settingName){
         // if its a checkbox then get the "checked" attribute
         if (document.getElementById(settingName).type == "checkbox") {
@@ -27,49 +25,44 @@
             "value": value
           })
         })
-        let resp = await res.json()
-        console.log(resp)
+        if(res.status == 500){
+          alert("Please make sure you aren't inserting invalid characters (ex: Letters in number field)")
+          return
+        }
+        let resp = res.json()
         if(resp.status != "SUCCESS") {
           alert(resp.content) 
         }
       }
     </script>
-  </head>
-  <body>
-    <div class="container">
-      <div class="commonContainer">
-        <div class="buttoncontainer">
-          <button onclick="settings()">Settings</button>
-          <button>Test</button>
-          <button>Test</button>
-          <button>Test</button>
-        </div>
-        <div class="settingsContainer">
-          <h1>Settings</h1>
-          <div class="settings">
+</head>
+<body>
+    <nav>
+        <a href="/">Home</a>
+        <a href="/settings">Settings</a>
+        <a href="/functions">Functions</a>
+    </nav>
+        <h1 style="padding-top: 4px">Settings</h1>
+
+    <div class="settingsContainer">
+
+            <!-- Template tags are retained as they are placeholders for dynamic content -->
             {% for setting in settings.settings %}
             <div class="setting">
                 <h2>{{ setting.name }}</h2>
-                <div class="sitem">
                 {% if setting.wtype == WidgetType.STRING %}
-                <input type="text" value="{{ setting.value }}" name="{{ setting.name }}" id="{{setting.name}}"> 
+                <input class="settinginput" type="text" value="{{ setting.value }}" name="{{ setting.name }}" id="{{ setting.name }}"> 
                 {% elif setting.wtype == WidgetType.NUMBER_FIELD %}
-                <input type="number" name="{{ setting.name }}" id="{{setting.name}}" value="{{setting.value}}">
+                <input class="settinginput" type="number" name="{{ setting.name }}" id="{{ setting.name }}" value="{{ setting.value }}">
                 {% elif setting.wtype == WidgetType.NUMBER_SLIDER %}
-                <input type="range" name="{{ setting.name }}" id="{{setting.name}}" value="{{setting.value}}" min="0" max="100">
+                <input class="settinginput" type="range" name="{{ setting.name }}" id="{{ setting.name }}" value="{{ setting.value }}" min="0" max="100">
                 {% elif setting.wtype == WidgetType.BOOLEAN %}
-                <div class="cbwrapper">
-                  <input type="checkbox" name="{{ setting.name }}" id="{{setting.name}}" {%if setting.value %}checked{%endif%}>                 
-                </div>
+                <input class="settinginput" type="checkbox" name="{{ setting.name }}" id="{{ setting.name }}" {% if setting.value %}checked{% endif %}>                 
                 {% endif %}
 
                 <button type="submit" onclick="setSetting('{{ setting.name }}')">Set Setting</button>
-                            </div>
             </div>
             {% endfor %}
-          </div>
-        </div>
-      </div>
     </div>
-  </body>
+</body>
 </html>

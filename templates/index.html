@@ -8,28 +8,25 @@
     <script src="{{ url_for('static', filename='index.js') }}" defer></script>
   </head>
   <body>
+      <nav>
+        <a href="/">Home</a>
+        <a href="/settings">Settings</a>
+        <a href="/functions">Functions</a>
+      </nav>
     {% if validpass %}
-    <div class="container">
-      <h1 class="welcome">Welcome to {{ sbname }} {{ name }}!</h1>
-      <div class="commonContainer">
-          <div class="buttoncontainer">
-            <button onclick="settings()">Settings</button>
-            <button>Test</button>
-            <button>Test</button>
-            <button>Test</button>
-          </div>
-          <div class="textcontainer">
-            <p>Servers: {{servers}}</p>
-            <p>Friends: {{friends}}</p>
-          </div>
-      </div>
-    </div>
+          <h1>Welcome to {{ sbname }}, {{name}}</h1>
+    <p>Friends: {{ friends }}</p>
+    <p>Guilds: {{ servers }}</p>
+    {% if motd %}
+    <p>Motd: {{ motd }}</p>
+    {% endif %}
     {% else %}
-    <div>
-      <h1>Enter the panel password:</h1>
-      <input type="text" name="pass" value="pass" id="pass">
-      <button onclick="validate()" type="submit">Submit</button>
-    </div>
+    <h1>You aren't logged in</h1>
+      <label for="panelpassword">Enter your panel password to continue</label>
+      <div>
+        <input type="password" required class="passwordInput" id="pass" />
+        <button onclick="validate()" type="submit"">Log in</button>
+      </div>
     {%endif%}
   </body>
 </html>

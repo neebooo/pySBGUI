@@ -135,14 +135,25 @@ class Settings:
         """
         for setting in self.settings:
             if setting.name == name:
-                print("Found... setting value")
+                # print("Found... setting value")
+                if (
+                    setting.wtype == WidgetType.NUMBER_FIELD
+                    or setting.wtype == WidgetType.NUMBER_SLIDER
+                ):
+                    try:
+                        # Try convert the value into a float
+                        float(value)
+                    except:
+                        raise AttributeError(
+                            f"{value} is not a number. Changing types aren't allowed!"
+                        )
                 setting.value = value
                 try:
                     filejson = None
                     with open(self.filename, "r") as f:
                         filejson = json.load(f)
                     filejson[setting.name]["value"] = value
-                    print(filejson[setting.name])
+                    # print(filejson[setting.name])
                     # exit(1)
                     with open(self.filename, "w") as f:
                         jsoned_dict = json.dumps(filejson)
@@ -232,6 +243,10 @@ class Window:
                 sess=flask.session["password"],
             )
 
+        @self.server.route("/functions")
+        def functions():
+            return flask.render_template("functions.html", sbname=self.botname)
+
         @self.server.post("/validate")
         def validate():
             body = flask.request.get_data().decode()
@@ -245,7 +260,7 @@ class Window:
         @self.server.post("/api/function/<function>")
         def apiFunc(function: str):
             body = flask.request.get_data().decode()
-            print(body)
+            # print(body)
             data: dict = json.loads(body)
             if data.get("password") is None or data.get("password") != self.password:
                 return Message("Invalid password", Status.FATAL).as_dict()
@@ -286,7 +301,7 @@ class Window:
             if data["value"] is None:
                 return Message("No value is provided", Status.ERROR).as_dict()
             self.settings.set(setting.name, data["value"])
-            print("Updated")
+            # print("Updated")
             return Message("Setting updated", Status.SUCCESS).as_dict()
 
         @self.server.errorhandler(404)
