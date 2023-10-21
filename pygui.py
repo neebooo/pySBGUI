@@ -241,6 +241,7 @@ class Window:
                 WidgetType=WidgetType,
                 settings=self.settings,
                 sess=flask.session["password"],
+                sbname=self.botname,
             )
 
         @self.server.route("/functions")
