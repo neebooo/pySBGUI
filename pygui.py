@@ -80,13 +80,18 @@ class Settings:
             for setting in fileJson:
                 if setting in self.blackistedSettings:
                     continue
-                if "type" not in fileJson[setting] or "value" not in fileJson[setting]:
+                if (
+                    "type" not in fileJson[setting]
+                    or "value" not in fileJson[setting]
+                    or "options" not in fileJson[setting]
+                ):
                     raise Exception("Malformed settings file")
                 self.settings.append(
                     Setting(
                         WidgetType(fileJson[setting]["type"]),
                         setting,
                         fileJson[setting]["value"],
+                        fileJson[setting]["options"],
                     )
                 )
 
@@ -99,6 +104,7 @@ class Settings:
                     settings_as_dict[setting.name] = {
                         "type": setting.wtype.value,
                         "value": setting.value,
+                        "options": setting.options,
                     }
                 jsoned_dict = json.dumps(settings_as_dict)
                 f.write(jsoned_dict)
