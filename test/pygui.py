@@ -64,45 +64,45 @@ class Settings:
         self.filename = filename
         self.blackistedSettings = ["token"]
 
-        # Try to open the provided filename and read the settings from it
-        if self.filename not in os.listdir():
-            self.initConfig()
-            return
-
-        if len(self.settings) != 0:
-            return
-
-        with open(filename, "r") as f:
-            # Convert contents to json
-            fileJson = json.load(f)
-            for setting in fileJson:
-                if setting in self.blackistedSettings:
-                    continue
-                if "type" not in fileJson[setting] or "value" not in fileJson[setting]:
-                    raise Exception("Malformed settings file")
-                self.settings.append(
-                    Setting(
-                        WidgetType(fileJson[setting]["type"]),
-                        setting,
-                        fileJson[setting]["value"],
-                    )
-                )
-
-    def initConfig(self) -> None:
-        if len(self.settings) != 0:
-            with open(self.filename, "w") as f:
-                # Convert self.settings into a dict which we can turn to a json later
-                settings_as_dict = {}
-                for setting in self.settings:
-                    settings_as_dict[setting.name] = {
-                        "type": setting.wtype.value,
-                        "value": setting.value,
+        # Do some work with the file, write the settings and its values
+        if len(settings) == 0:
+            # Try to open the provided filename and read the settings from it
+            try:
+                with open(filename, "r") as f:
+                    # Convert contents to json
+                    fileJson = json.load(f)
+                    for setting in fileJson:
+                        if setting in self.blackistedSettings:
+                            continue
+                        if (
+                            "type" not in fileJson[setting]
+                            or "value" not in fileJson[setting]
+                        ):
+                            raise Exception("Malformed settings file")
+                        self.settings.append(
+                            Setting(
+                                WidgetType(fileJson[setting]["type"]),
+                                setting,
+                                fileJson[setting]["value"],
+                            )
+                        )
+                    # nothing for now
+            except FileNotFoundError:
+                # Make a new file
+                with open(filename, "w") as f:
+                    dict_soon_json: dict = {
+                        "Setting1": {
+                            "type": 0,
+                            "value": True,
+                        },
+                        "Setting2": {"type": 1, "value": 124},
+                        "Setting3": {"type": 2, "value": 50},
+                        "Setting4": {"type": 3, "value": "Hello world"},
                     }
-                jsoned_dict = json.dumps(settings_as_dict)
-                f.write(jsoned_dict)
-        else:
-            print("[FATAL] No settings file found and no templates given")
-            exit(1)
+                    jsoned_dict = json.dumps(dict_soon_json)
+                    f.write(jsoned_dict)
+            except Exception as e:
+                raise e
 
     def get(self, name) -> Setting | None:
         """
