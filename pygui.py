@@ -31,6 +31,7 @@ class WidgetType(Enum):
     NUMBER_FIELD = 1
     NUMBER_SLIDER = 2
     STRING = 3
+    RADIO_BUTTON = 4
 
 
 class Setting:
@@ -38,10 +39,11 @@ class Setting:
     This class represents a setting.
     """
 
-    def __init__(self, wtype: WidgetType, name: str, value):
+    def __init__(self, wtype: WidgetType, name: str, value, options: List[str] = []):
         self.wtype = wtype
         self.name = name
         self.value = value
+        self.options = options  # This is only used when wtype is RADIO_BUTTON (4)
 
 
 class Settings:
@@ -147,6 +149,9 @@ class Settings:
                         raise AttributeError(
                             f"{value} is not a number. Changing types aren't allowed!"
                         )
+                elif setting.wtype == WidgetType.RADIO_BUTTON:
+                    if value not in setting.options:
+                        raise AttributeError(f"{value} is not a valid option")
                 setting.value = value
                 try:
                     filejson = None
@@ -301,7 +306,10 @@ class Window:
                 return Message("Setting not found", Status.ERROR).as_dict()
             if data["value"] is None:
                 return Message("No value is provided", Status.ERROR).as_dict()
-            self.settings.set(setting.name, data["value"])
+            try:
+                self.settings.set(setting.name, data["value"])
+            except AttributeError as e:
+                return Message(str(e), Status.ERROR).as_dict()
             # print("Updated")
             return Message("Setting updated", Status.SUCCESS).as_dict()
 
