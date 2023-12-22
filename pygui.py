@@ -250,7 +250,18 @@ class Window:
 
         @self.server.route("/functions")
         def functions():
-            return flask.render_template("functions.html", sbname=self.botname)
+            if (
+                flask.session.get("password") is None
+                or flask.session.get("password") != self.password
+            ):
+                return flask.redirect("/")
+            return flask.render_template(
+                "functions.html",
+                WidgetType=WidgetType,
+                functions=self.functions,
+                sess=flask.session["password"],
+                sbname=self.botname,
+            )
 
         @self.server.post("/validate")
         def validate():
@@ -274,12 +285,10 @@ class Window:
             if function_obj.__code__.co_argcount != len(data) - 1:
                 return Message("Invalid number of arguments", Status.ERROR).as_dict()
             if function_obj.__code__.co_argcount == 0:
-                return flask.render_template_string(function_obj().__str__())
+                return Message(function_obj(),Status.SUCCESS).as_dict()
             else:
                 data.pop("password")
-                return flask.render_template_string(
-                    function_obj(*data.values().__str__())
-                )
+                return Message(function_obj(*data.values().__str__()),Status.SUCCESS).as_dict()
 
         @self.server.post("/api/setting/get/<setting_name>")
         def api_setting_get(setting_name: str):
