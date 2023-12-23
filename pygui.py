@@ -33,6 +33,7 @@ class WidgetType(Enum):
     RADIO_BUTTON = 4
 
 
+# @NOTE: Unused for now but may be used in the future
 class VeryGoodTTL:
     def __init__(self, ttl=15):
         self.ttl = ttl  # Time to live in mins
@@ -210,7 +211,11 @@ class Message:
     def as_dict(self):
         return {"content": self.content, "status": self.status}
 
-
+def deceprated(func):
+    # This is just a decorator that makes the source code look nicer
+    # I know this is a terrible way to do anything but I like it this way.
+    # If you are so annoyed make a PR
+    pass
 class Window:
     """
     Represents the whole GUI and its internal components
@@ -219,7 +224,6 @@ class Window:
     def __init__(
         self,
         bot: discord.Client,
-        token: str,
         bot_name: str,
         password: str,
         functions: dict[str, Callable],
@@ -227,12 +231,12 @@ class Window:
     ):
         self.server = flask.Flask(__name__)
         self.bot = bot
-        self.token = token  # The app now requires the token to be passed
         self.password = password
         self.botname = bot_name
         self.functions = functions
         self.settings = settings
         self.discordcache = VeryGoodTTL(15)
+
 
     def register(self):
         """
@@ -244,10 +248,11 @@ class Window:
 
         self.server.secret_key = secrets.token_hex()
 
+        @deceprated
         def get_relations():
             if self.discordcache.get("relations") is None:
                 global_headers = {
-                    'authorization': self.token,
+                    'authorization': "DECEPRATED",
                     'authority': 'discord.com',
                     'accept': '*/*',
                     'accept-language': 'sv,sv-SE;q=0.9',
@@ -294,8 +299,8 @@ class Window:
                 servers=self.bot.guilds.__len__(),
                 friends=self.bot.user.friends.__len__(),
                 validpass=self.password == flask.session.get("password"),
-                friendcount=get_relations()["friends"],
-                blockcount=get_relations()["blocked"],
+                friendcount=self.bot.user.friends.__len__(),
+                blockcount=self.bot.user.blocked.__len__(),
                 hasnitro12=int(self.bot.user.premium) + 1
             )
 
