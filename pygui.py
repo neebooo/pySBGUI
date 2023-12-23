@@ -191,11 +191,7 @@ class Settings:
                     exit(1)
                 except Exception as e:
                     raise e
-
-        raise AttributeError(
-            f"The {name} setting does not exist. In the object {
-                self.__class__.__name__}"
-        )
+        raise AttributeError(f"The {name} setting does not exist. In the object {self.__class__.__name__}")  # nopep8
 
 
 class Message:
@@ -211,11 +207,14 @@ class Message:
     def as_dict(self):
         return {"content": self.content, "status": self.status}
 
+
 def deceprated(func):
     # This is just a decorator that makes the source code look nicer
     # I know this is a terrible way to do anything but I like it this way.
     # If you are so annoyed make a PR
     pass
+
+
 class Window:
     """
     Represents the whole GUI and its internal components
@@ -236,7 +235,6 @@ class Window:
         self.functions = functions
         self.settings = settings
         self.discordcache = VeryGoodTTL(15)
-
 
     def register(self):
         """
@@ -284,7 +282,8 @@ class Window:
                     [user for user in resp if user.get('type') == 2])
                 self.discordcache.set(
                     "relations",
-                    {"friends": friends, "pendinginc": pendinginc, "pendingout": pendingout, "blocked": blocked},
+                    {"friends": friends, "pendinginc": pendinginc,
+                        "pendingout": pendingout, "blocked": blocked},
                 )
                 return self.discordcache.get("relations")
             else:
