@@ -59,10 +59,12 @@
                 {% elif setting.wtype == WidgetType.BOOLEAN %}
                 <input class="settinginput" type="checkbox" name="{{ setting.name }}" id="{{ setting.name }}" {% if setting.value %}checked{% endif %}>                 
                 {% elif setting.wtype == WidgetType.RADIO_BUTTON %}
+                  <div class="radioinput">
                   {% for opt in setting.options %}
         <input class="settinginput" type="radio" name="{{setting.name}}" id="{{setting.name}}" value="{{opt}}">
           <label for="{{setting.name}}">{{opt}}</label>
                   {% endfor %}
+                </div>
                 {% endif %}
 
                 <button type="submit" onclick="setSetting('{{ setting.name }}')">Set Setting</button>

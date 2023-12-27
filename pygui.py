@@ -8,8 +8,6 @@ import secrets  # Needed for flask session
 import json  # Needed for the Settings class
 import time
 import requests
-
-
 class Status(Enum):
     """
     Status codes for notifications
@@ -19,7 +17,6 @@ class Status(Enum):
     ERROR = 1
     WARNING = 2
     FATAL = 3
-
 
 class WidgetType(Enum):
     """
@@ -61,8 +58,11 @@ class Setting:
         self.wtype = wtype
         self.name = name
         self.value = value
-        # This is only used when wtype is RADIO_BUTTON (4)
+        # This is only used when wtype is RADIO_BUTTON (4) and sliders (2)
         self.options = options
+
+    def __str__(self):
+        return f"Name: {self.name}\nType: {self.wtype}\nValue: {self.value}\nOptions: {self.options}"
 
 
 class Settings:
@@ -169,7 +169,7 @@ class Settings:
                     try:
                         # Try convert the value into a float
                         float(value)
-                    except:
+                    except ValueError:
                         raise AttributeError(
                             f"{value} is not a number. Changing types aren't allowed!"
                         )

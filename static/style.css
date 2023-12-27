@@ -1,6 +1,6 @@
 body {
   background-color: #1b1b1b;
-  font-family: "Courier New", Courier, monospace;
+  font-family: monospace;
   margin: 0;
   padding: 0;
   display: flex;
@@ -378,4 +378,25 @@ input[type="range"]:active::-moz-range-progress {
   from {
     width: 0;
   }
+}
+
+.radioinput {
+  cursor: pointer;
+  font-size: 22px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.radioinput input[type="radio"] {
+  cursor: pointer;
+  /* Radio button input */
+  border: #1b1b1b solid 2px;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
 }
