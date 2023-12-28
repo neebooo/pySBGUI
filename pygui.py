@@ -8,6 +8,8 @@ import secrets  # Needed for flask session
 import json  # Needed for the Settings class
 import time
 import requests
+
+
 class Status(Enum):
     """
     Status codes for notifications
@@ -17,6 +19,7 @@ class Status(Enum):
     ERROR = 1
     WARNING = 2
     FATAL = 3
+
 
 class WidgetType(Enum):
     """
@@ -244,6 +247,51 @@ class Window:
             None
         """
 
+        @self.server.context_processor
+        def inject():
+            url_for = self.server.url_for
+            headglobal = """<script src=\"https://cdn.tailwindcss.com\"></script>
+            <script>
+            tailwind.config = {
+              theme: {
+                extend: {
+                  colors: {
+                    'true-gray-800': '#262626',
+                    'true-gray-600': '#525252'
+                  },
+                }
+              }
+            }
+            </script>
+            <style type="text/tailwindcss">
+                body {
+                  @apply bg-true-gray-800 flex flex-col justify-center items-center text-white m-0 p-0 sm:text-sm;
+                  font-family: monospace;
+                }
+                nav {
+                  @apply text-center text-2xl py-2.5 sm:text-base;
+                }
+                a {
+                  @apply text-white no-underline m-2.5 p-2.5 hover:bg-true-gray-600 hover:rounded-3xl;
+                }
+
+                h1 {
+                  @apply text-5xl sm:mx-[20vw];
+                }
+                button {
+                  @apply bg-purple-500 text-lg mt-4 p-4 rounded-2xl border-none hover:bg-purple-600 hover:cursor-pointer;
+                }
+
+                input[type="text"],
+                input[type="number"],
+                input[type="password"]
+                 {
+                  @apply w-[200px] h-[25px] text-lg mt-2.5 p-2.5 rounded-lg border-none outline-none;
+                }
+            </style>
+            """.replace("{staticurl}", url_for("static", filename=""))
+            return dict(headglobal=headglobal)
+
         self.server.secret_key = secrets.token_hex()
 
         @deceprated
@@ -300,7 +348,7 @@ class Window:
                 validpass=self.password == flask.session.get("password"),
                 friendcount=self.bot.user.friends.__len__(),
                 blockcount=self.bot.user.blocked.__len__(),
-                hasnitro12=int(self.bot.user.premium) + 1
+                hasnitro12=int(self.bot.user.premium) + 1,
             )
 
         self.server.static_folder = os.path.join(

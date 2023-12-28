@@ -1,81 +1,3 @@
-body {
-  background-color: #1b1b1b;
-  font-family: monospace;
-  margin: 0;
-  padding: 0;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  color: white;
-}
-nav {
-  padding-top: 10px;
-  padding-bottom: 10px;
-  text-align: center;
-  font-size: 24px;
-}
-a {
-  color: white;
-  text-decoration: none;
-  padding: 10px;
-  margin: 10px;
-}
-
-a:hover {
-  background-color: #555;
-  border-radius: 7%;
-  animation: morph 0.1s ease normal;
-}
-
-/* Create an animation for a:hover */
-@keyframes morph {
-  0% {
-    border-radius: 28%;
-  }
-  50% {
-    border-radius: 14%;
-  }
-  100% {
-    border-radius: 7%;
-  }
-}
-
-/* Password input field */
-
-input.passwordInput[type="password"] {
-  width: 200px;
-  height: 25px;
-  border: none;
-  border-radius: 15px;
-  font-size: large;
-  margin-top: 10px;
-  padding: 10px;
-}
-
-input.passwordInput[type="password"]:focus {
-  outline: none;
-  border: none;
-  border-radius: 10px;
-}
-
-button {
-  margin-top: 15px;
-  padding: 15px;
-  border: none;
-  outline: none;
-  background-color: rgba(117, 19, 209, 0.973);
-  font-family: "Courier New", Courier, monospace;
-  font-size: large;
-  border-radius: 15px;
-}
-
-button:hover {
-  background-color: rgba(117, 19, 209, 0.8);
-  /* border-radius: 10px; */
-  cursor: pointer;
-}
-
 .settingsContainer {
   display: flex;
   flex-direction: row;
@@ -332,19 +254,6 @@ input[type="range"]:hover::-moz-range-progress {
 input[type="range"]:active::-moz-range-thumb,
 input[type="range"]:active::-moz-range-progress {
   filter: brightness(var(--brightness-down));
-}
-
-@media (max-width: 600px) {
-  body {
-    font-size: 14px;
-  }
-  h1 {
-    margin-left: 20vw;
-    margin-right: 20vw;
-  }
-  nav {
-    font-size: 16px;
-  }
 }
 
 .stat-container {

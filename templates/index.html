@@ -5,7 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{{sbname}} - Dashboard</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+    {{headglobal|safe}}
     <script defer>
+      // @WARN: Using only Tailwind will break the code
       function setline(elementID,percentage,maxPercentage) {
         const bstatPercentage = percentage;
         const bstatLine = document.getElementById(elementID);
@@ -52,7 +54,7 @@
     <h1>You aren't logged in</h1>
       <label for="panelpassword">Enter your panel password to continue</label>
       <div onkeydown="keyDown(event)">
-        <input type="password" required class="passwordInput" id="pass" />
+        <input type="password" required class="w-[200px] h-[25px] border-none rounded-lg text-lg mt-2.5 p-2.5 focus:outline-none focus:border-none focus:rounded-sm" id="pass" />
         <button onclick="validate()" type="submit"">Log in</button>
       </div>
     {%endif%}
